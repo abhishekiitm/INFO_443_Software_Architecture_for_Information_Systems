@@ -20,12 +20,12 @@ class OrderProcessor(object):
         """
         creates an OrderProcessor class from a list of order objects
         """
-        # self.to_be_processed_deque = self._convert_orders_to_deque(
-        #     orders_to_be_processed)
-        # self.to_be_processed_dict = self._convert_orders_to_dict(
-        #     orders_to_be_processed)
+
+        # create empty deque and dictionary to store orders to be processed
         self.to_be_processed_deque = deque()
         self.to_be_processed_dict = {}
+
+        # loop through orders, validate and add them to be processed
         for order in orders_to_be_processed:
             if not self._validate_items(order):
                 continue
