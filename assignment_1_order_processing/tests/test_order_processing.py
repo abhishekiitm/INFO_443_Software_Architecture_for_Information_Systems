@@ -253,7 +253,7 @@ def test_OrderProcessing_validate_items_food():
     # Arrange
     order_id = 1
     order_type = OrderType.FOOD
-    properties_dict = { 
+    properties_dict = {
         "order_number": "A10",
         "item": "milk",
         "quantity": 2,
@@ -264,7 +264,7 @@ def test_OrderProcessing_validate_items_food():
     order = Order(order_id, order_type, properties_dict)
     order_processor = OrderProcessor([])
 
-    properties_dict_2 = { 
+    properties_dict_2 = {
         "order_number": "A10",
         "item": "milk",
         "quantity": 0,
@@ -281,3 +281,122 @@ def test_OrderProcessing_validate_items_food():
     # Assert
     assert result1 is True
     assert result0 is False
+
+
+def test_OrderProcessing_edit_order_dict():
+    # Arrange
+    order_id_1 = 1
+    order_type_1 = OrderType.BOOK
+    properties_dict_1 = {
+        "title": "Snow Crash",
+        "author": "Neal Stephenson",
+        "price": 14.99,
+        "no_items": 1
+    }
+    order_1 = Order(order_id_1, order_type_1, properties_dict_1)
+
+    order_id_2 = 1
+    order_type_2 = OrderType.BOOK
+    properties_dict_2 = {
+        "title": "Snow Crash",
+        "author": "Neal Stephenson",
+        "price": 14.99,
+        "no_items": 0
+    }
+    order_2 = Order(order_id_2, order_type_2, properties_dict_2)
+
+    orders_to_be_processed = [order_1]
+    order_processor = OrderProcessor(orders_to_be_processed)
+
+    # Act
+    order_processor.edit_order(order_2)
+    order = order_processor.to_be_processed_dict
+
+    # Assert
+    assert len(order) == len(order_processor.to_be_processed_deque) == 0
+
+
+def test_OrderProcessing_calculate_cost_book():
+    # Arrange
+    order_id = 1
+    order_type = OrderType.BOOK
+    properties_dict = {
+        "title": "Snow Crash",
+        "author": "Neal Stephenson",
+        "price": 14.99,
+        "no_items": 1
+    }
+    order = Order(order_id, order_type, properties_dict)
+    order_processor = OrderProcessor([])
+
+    # Act
+    cost = order_processor._calculate_cost(order)
+
+    # Assert
+    assert cost == 14.99
+
+
+def test_OrderProcessing_calculate_cost_material():
+    # Arrange
+    order_id = 1
+    order_type = OrderType.MATERIAL
+    properties_dict = {
+        "description": "Sand",
+        "quantity": 2,
+        "price": 5,
+        "base_quantity": 1,
+        "unit of measurement": "lbs"
+    }
+    order = Order(order_id, order_type, properties_dict)
+    order_processor = OrderProcessor([])
+
+    # Act
+    cost = order_processor._calculate_cost(order)
+
+    # Assert
+    assert cost == 10
+
+
+def test_OrderProcessing_calculate_cost_food():
+    # Arrange
+    order_id = 1
+    order_type = OrderType.FOOD
+    properties_dict = {
+        "order_number": "A10",
+        "item": "milk",
+        "quantity": 4,
+        "price": 5,
+        "base_quantity": 1,
+        "unit of measurement": "lbs"
+    }
+    order = Order(order_id, order_type, properties_dict)
+    order_processor = OrderProcessor([])
+
+    # Act
+    cost = order_processor._calculate_cost(order)
+
+    # Assert
+    assert cost == 20
+
+
+def test_OrderProcessing_process_order():
+    # Arrange
+    order_id = 1
+    order_type = OrderType.FOOD
+    properties_dict = {
+        "order_number": "A10",
+        "item": "milk",
+        "quantity": 4,
+        "price": 5,
+        "base_quantity": 1,
+        "unit of measurement": "lbs"
+    }
+    order = Order(order_id, order_type, properties_dict)
+    order_processor = OrderProcessor([order])
+
+    # Act
+    order_processor.process_order()
+
+    # Assert
+    assert len(order_processor.to_be_processed_deque) == 0
+    assert len(order_processor.to_be_processed_dict) == 0
