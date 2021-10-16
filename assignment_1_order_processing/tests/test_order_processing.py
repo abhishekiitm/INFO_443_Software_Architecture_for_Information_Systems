@@ -187,7 +187,7 @@ def test_OrderProcessing_edit_order_deque():
     assert order_processor.to_be_processed_deque[-1] == 1
 
 
-def test_OrderProcessing_validate_items():
+def test_OrderProcessing_validate_items_book():
     # Arrange
     order_id = 1
     order_type = OrderType.BOOK
@@ -205,6 +205,72 @@ def test_OrderProcessing_validate_items():
         "author": "Neal Stephenson",
         "price": 14.99,
         "no_items": 0
+    }
+    order_2 = Order(order_id, order_type, properties_dict_2)
+
+    # Act
+    result1 = order_processor._validate_items(order)
+    result0 = order_processor._validate_items(order_2)
+
+    # Assert
+    assert result1 is True
+    assert result0 is False
+
+
+def test_OrderProcessing_validate_items_material():
+    # Arrange
+    order_id = 1
+    order_type = OrderType.MATERIAL
+    properties_dict = {
+        "description": "Sand",
+        "quantity": 2,
+        "price": 5,
+        "base_quantity": 1,
+        "unit of measurement": "lbs"
+    }
+    order = Order(order_id, order_type, properties_dict)
+    order_processor = OrderProcessor([])
+
+    properties_dict_2 = {
+        "description": "Sand",
+        "quantity": 0,
+        "price": 5,
+        "base_quantity": 1,
+        "unit of measurement": "lbs"
+    }
+    order_2 = Order(order_id, order_type, properties_dict_2)
+
+    # Act
+    result1 = order_processor._validate_items(order)
+    result0 = order_processor._validate_items(order_2)
+
+    # Assert
+    assert result1 is True
+    assert result0 is False
+
+
+def test_OrderProcessing_validate_items_food():
+    # Arrange
+    order_id = 1
+    order_type = OrderType.FOOD
+    properties_dict = { 
+        "order_number": "A10",
+        "item": "milk",
+        "quantity": 2,
+        "price": 5,
+        "base_quantity": 1,
+        "unit of measurement": "lbs"
+    }
+    order = Order(order_id, order_type, properties_dict)
+    order_processor = OrderProcessor([])
+
+    properties_dict_2 = { 
+        "order_number": "A10",
+        "item": "milk",
+        "quantity": 0,
+        "price": 5,
+        "base_quantity": 1,
+        "unit of measurement": "lbs"
     }
     order_2 = Order(order_id, order_type, properties_dict_2)
 
