@@ -60,7 +60,7 @@ class OrderProcessor(object):
         self.to_be_processed_deque.append(order.order_id)
         self.to_be_processed_dict[order.order_id] = copy.deepcopy(order)
 
-    def modify_order(self, order):
+    def edit_order(self, order):
         order_id = order.order_id
         if order_id not in self.to_be_processed_dict:
             print(f"Order id: {order_id} does not exist")
@@ -71,3 +71,12 @@ class OrderProcessor(object):
         # restart the to to be processed process
         self.to_be_processed_deque.remove(order_id)
         self.to_be_processed_deque.append(order_id)
+
+    def _validate_items(self, order):
+        if order.order_type == OrderType.BOOK:
+            if order.properties_dict['no_items']<=0: return False
+        if order.order_type == OrderType.MATERIAL:
+            if order.properties_dict['quantity']<=0: return False
+        if order.order_type == OrderType.FOOD:
+            if order.properties_dict['quantity']<=0: return False
+        return True

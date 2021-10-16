@@ -185,3 +185,33 @@ def test_OrderProcessing_edit_order_deque():
 
     # Assert
     assert order_processor.to_be_processed_deque[-1] == 1
+
+
+def test_OrderProcessing_validate_items():
+    # Arrange
+    order_id = 1
+    order_type = OrderType.BOOK
+    properties_dict = {
+        "title": "Snow Crash",
+        "author": "Neal Stephenson",
+        "price": 14.99,
+        "no_items": 1
+    }
+    order = Order(order_id, order_type, properties_dict)
+    order_processor = OrderProcessor([])
+
+    properties_dict_2 = {
+        "title": "Snow Crash",
+        "author": "Neal Stephenson",
+        "price": 14.99,
+        "no_items": 0
+    }
+    order_2 = Order(order_id, order_type, properties_dict_2)
+
+    # Act
+    result1 = order_processor._validate_items(order)
+    result0 = order_processor._validate_items(order_2)
+
+    # Assert
+    assert result1 is True
+    assert result0 is False
