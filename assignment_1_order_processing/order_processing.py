@@ -20,31 +20,14 @@ class OrderProcessor(object):
         """
         creates an OrderProcessor class from a list of order objects
         """
-        self.to_be_processed_deque = self._convert_orders_to_deque(
-            orders_to_be_processed)
-        self.to_be_processed_dict = self._convert_orders_to_dict(
-            orders_to_be_processed)
-
-    def _convert_orders_to_deque(self, orders):
-        """
-        this method creates a deque from the order ids
-        this deque of order ids will be used to maintain FIFO
-        processing of the orders
-        """
-        order_id_deque = deque()
-        for order in orders:
-            order_id_deque.append(order.order_id)
-        return order_id_deque
-
-    def _convert_orders_to_dict(self, orders):
-        """
-        this method creates a dictionary from the orders
-        this dictionary is used for O(1) access for reporting
-        """
-        order_id_dict = {}
-        for order in orders:
-            order_id_dict[order.order_id] = copy.deepcopy(order)
-        return order_id_dict
+        # self.to_be_processed_deque = self._convert_orders_to_deque(
+        #     orders_to_be_processed)
+        # self.to_be_processed_dict = self._convert_orders_to_dict(
+        #     orders_to_be_processed)
+        self.to_be_processed_deque = deque()
+        self.to_be_processed_dict = {}
+        for order in orders_to_be_processed:
+            self.add_order_to_be_processed(order)
 
     def report_status(self, order_id):
         if order_id not in self.to_be_processed_dict:
