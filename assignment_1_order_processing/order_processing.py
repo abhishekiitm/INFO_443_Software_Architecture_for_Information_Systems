@@ -46,5 +46,15 @@ class OrderProcessor(object):
             order_id_dict[order.order_id] = copy.deepcopy(order)
         return order_id_dict
 
+    def report_status(self, order_id):
+        if order_id not in self.to_be_processed_dict:
+            print("This order does not exist.")
+            return False
+        order = self.to_be_processed_dict[order_id]
+        order_status = "TO BE PROCESSED"
+        print(f"Order Type for order id: {order_id} is '{order.order_type}'")
+        print(f"Order status: {order_status}")
+        return True
+
     def add_order_to_be_processed(self, order):
         self.orders_to_be_processed.append(order)
