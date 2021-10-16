@@ -283,7 +283,7 @@ def test_OrderProcessing_validate_items_food():
     assert result0 is False
 
 
-def test_OrderProcessing_edit_order_dict():
+def test_OrderProcessing_edit_order_validate():
     # Arrange
     order_id_1 = 1
     order_type_1 = OrderType.BOOK

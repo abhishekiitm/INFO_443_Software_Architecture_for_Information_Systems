@@ -32,6 +32,9 @@ class OrderProcessor(object):
             self.add_order_to_be_processed(order)
 
     def report_status(self, order_id):
+        """
+        prints the order type and status of the order
+        """
         if order_id not in self.to_be_processed_dict:
             print(f"Order id: {order_id} does not exist")
             return False
@@ -42,6 +45,9 @@ class OrderProcessor(object):
         return True
 
     def add_order_to_be_processed(self, order):
+        """
+        adds an order to the list of order to be processed
+        """
         self.to_be_processed_deque.append(order.order_id)
         self.to_be_processed_dict[order.order_id] = copy.deepcopy(order)
 
@@ -61,6 +67,9 @@ class OrderProcessor(object):
             self.to_be_processed_dict.pop(order_id)
 
     def _validate_items(self, order):
+        """
+        checks if the no of items of an order are valid or not
+        """
         if order.order_type == OrderType.BOOK:
             if order.properties_dict['no_items'] <= 0:
                 return False
@@ -85,6 +94,9 @@ class OrderProcessor(object):
         return 0
 
     def process_order(self):
+        """
+        processes the first order in the queue waiting to be processed
+        """
         if len(self.to_be_processed_deque) == 0:
             return
         order_id = self.to_be_processed_deque.popleft()
