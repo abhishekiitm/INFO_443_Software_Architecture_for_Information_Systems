@@ -118,3 +118,70 @@ def test_OrderProcessing_add_order_to_be_processed():
 
     # Assert
     assert order_processor.to_be_processed_deque == deque([1, 2])
+
+
+def test_OrderProcessing_edit_order_dict():
+    # Arrange
+    order_id_1 = 1
+    order_type_1 = OrderType.BOOK
+    properties_dict_1 = {
+        "title": "Snow Crash",
+        "author": "Neal Stephenson",
+        "price": 14.99,
+        "no_items": 1
+    }
+    order_1 = Order(order_id_1, order_type_1, properties_dict_1)
+
+    order_id_2 = 1
+    order_type_2 = OrderType.BOOK
+    properties_dict_2 = {
+        "title": "Snow Crash",
+        "author": "Neal Stephenson",
+        "price": 14.99,
+        "no_items": 2
+    }
+    order_2 = Order(order_id_2, order_type_2, properties_dict_2)
+
+    orders_to_be_processed = [order_1]
+    order_processor = OrderProcessor(orders_to_be_processed)
+
+    # Act
+    order_processor.edit_order(order_2)
+    order = order_processor.to_be_processed_dict
+
+    # Assert
+    assert order[order_id_1].properties_dict['no_items'] == 2
+
+
+def test_OrderProcessing_edit_order_deque():
+    # Arrange
+    order_id_1 = 1
+    order_type_1 = OrderType.BOOK
+    properties_dict_1 = {
+        "title": "Snow Crash",
+        "author": "Neal Stephenson",
+        "price": 14.99,
+        "no_items": 1
+    }
+    order_1 = Order(order_id_1, order_type_1, properties_dict_1)
+    order_3 = Order(2, order_type_1, properties_dict_1)
+
+    order_id_2 = 1
+    order_type_2 = OrderType.BOOK
+    properties_dict_2 = {
+        "title": "Snow Crash",
+        "author": "Neal Stephenson",
+        "price": 14.99,
+        "no_items": 2
+    }
+    order_2 = Order(order_id_2, order_type_2, properties_dict_2)
+
+    orders_to_be_processed = [order_1, order_3]
+    order_processor = OrderProcessor(orders_to_be_processed)
+
+    # Act
+    order_processor.edit_order(order_2)
+    order = order_processor.to_be_processed_dict
+
+    # Assert
+    assert order_processor.to_be_processed_deque[-1] == 1

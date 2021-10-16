@@ -48,7 +48,7 @@ class OrderProcessor(object):
 
     def report_status(self, order_id):
         if order_id not in self.to_be_processed_dict:
-            print("This order does not exist.")
+            print(f"Order id: {order_id} does not exist")
             return False
         order = self.to_be_processed_dict[order_id]
         order_status = "TO BE PROCESSED"
@@ -59,3 +59,15 @@ class OrderProcessor(object):
     def add_order_to_be_processed(self, order):
         self.to_be_processed_deque.append(order.order_id)
         self.to_be_processed_dict[order.order_id] = copy.deepcopy(order)
+
+    def modify_order(self, order):
+        order_id = order.order_id
+        if order_id not in self.to_be_processed_dict:
+            print(f"Order id: {order_id} does not exist")
+            return False
+        # update order details
+        self.to_be_processed_dict[order_id] = copy.deepcopy(order)
+
+        # restart the to to be processed process
+        self.to_be_processed_deque.remove(order_id)
+        self.to_be_processed_deque.append(order_id)
