@@ -57,4 +57,5 @@ class OrderProcessor(object):
         return True
 
     def add_order_to_be_processed(self, order):
-        self.orders_to_be_processed.append(order)
+        self.to_be_processed_deque.append(order.order_id)
+        self.to_be_processed_dict[order.order_id] = copy.deepcopy(order)
